@@ -14,6 +14,7 @@ type AuthContextType = {
   login: (email: string, password: string) => Promise<void>;
   register: (username: string, email: string, password: string) => Promise<void>;
   logout: () => void;
+  token: string;
 };
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
@@ -21,27 +22,34 @@ const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User>(null);
   const [loading, setLoading] = useState(true);
+  const [token, setToken] = useState("");
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     const storedToken = localStorage.getItem("token");
+
     if (storedUser && storedToken) {
       setUser(JSON.parse(storedUser));
+      setToken(storedToken);   
     }
+
     setLoading(false);
   }, []);
 
   async function login(email: string, password: string) {
     const response = await authApi.login({ email, password, role: "USER" });
 
-    const token = response.data.token; // pega o token
+    const newToken = response.data.token;
+    setToken(newToken);
+
     const userData: User = {
       username: response.data.username,
       email: response.data.email,
     };
 
-    localStorage.setItem("token", token);
+    localStorage.setItem("token", newToken);
     localStorage.setItem("user", JSON.stringify(userData));
+
     setUser(userData);
   }
 
@@ -52,11 +60,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   function logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    setToken("");           
     setUser(null);
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider
+      value={{ user, loading, login, register, logout, token }}
+    >
       {children}
     </AuthContext.Provider>
   );

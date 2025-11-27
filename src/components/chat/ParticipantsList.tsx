@@ -9,7 +9,7 @@ type ParticipantsListProps = {
 } & React.HTMLAttributes<HTMLDivElement>;
 
 export function ParticipantsList({ className = "", ...props }:ParticipantsListProps) {
-  const { participants, setSelectedUser, currentRoom } = useChat();
+  const {  setSelectedUser, currentRoom } = useChat();
 
   if (!currentRoom)
     return <></>;
@@ -24,7 +24,7 @@ export function ParticipantsList({ className = "", ...props }:ParticipantsListPr
       </div>
 
       <div className="flex flex-col gap-3">
-        {participants.map((p) => (
+        {participants && participants.map((p) => (
           <button
             key={p.id}
             onClick={() => setSelectedUser(p)}

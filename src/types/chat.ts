@@ -7,16 +7,11 @@ export type ChatParticipant = {
   };
   
   export type Message = {
-    id: string;
-    sender: {
-      id: string | null;
-      name: string | null;
-      avatarUrl: string | null;
-      color: string
-    };
+    senderUsername?: string
+    createdAt?: string
+    forumId: string;
     content: string;
-    createdAt: number;
-    updatedAt: number;
+    recipientEmail?: string
   };
   
   
@@ -28,5 +23,6 @@ export type ChatParticipant = {
     participants: ChatParticipant[];
     messages: Message[];
     peopleCount: number;
+    createdAt: Date;
   };
   

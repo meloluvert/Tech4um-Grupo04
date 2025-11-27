@@ -1,6 +1,7 @@
 "use client";
 
 import { useChat } from "@/contexts/ChatContext";
+import Link from "next/link"
 
 type RoomsSidebarProps = {
   className?: string;
@@ -16,8 +17,9 @@ export function RoomsSidebar({ rooms, className }: RoomsSidebarProps) {
 
       <div className="flex flex-col gap-2 mt-4">
         {rooms.map((r: any) => (
-          <button
+          <Link
             key={r.id}
+            href={`/forum/${r.id}`}
             onClick={() => setRoomById(r.id)}
             className={`p-3 rounded-xl text-left transition ${
               currentRoom?.id === r.id
@@ -27,13 +29,12 @@ export function RoomsSidebar({ rooms, className }: RoomsSidebarProps) {
           >
              <p className={`font-semibold ${
               currentRoom?.id === r.id ? "text-white" : "text-blue-600"
-             }`}>{r.name}</p>
+             }`}>{r.title}</p>
             <span className={`text-xs  ${
               currentRoom?.id === r.id ? "text-white" : "text-gray-500"
             }`}>
-              {r.peopleCount} pessoas
             </span>
-          </button>
+          </Link>
         ))}
       </div>
     </div>
